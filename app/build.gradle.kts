@@ -86,8 +86,10 @@ android {
             buildConfigField("long", "BUILD_TIME", "${System.currentTimeMillis()}L")
         }
         release {
-            if (System.getenv("GITHUB_ACTIONS") == null ||
-                System.getenv("CI_BUILD_MINIFY").toBoolean()
+            // 仅对 liteRelease 启用混淆
+            val isLiteVariant = gradle.startParameter.taskNames.any { it.contains("Lite") || it.contains("lite") }
+            if (isLiteVariant &&
+                (System.getenv("GITHUB_ACTIONS") == null || System.getenv("CI_BUILD_MINIFY").toBoolean())
             ) {
                 isMinifyEnabled = true
                 isShrinkResources = true
