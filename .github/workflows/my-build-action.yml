@@ -143,19 +143,6 @@ jobs:
           echo "Moving recompressed Lite APK to upload directory"
           mv ./zhihu++-lite.apk ../app/build/upload/zhihu++-lite.apk
 
-      - name: Compress mapping file
-        if: ${{ inputs.minify }}
-        run: |
-          # Full mapping
-          cd app/build/outputs/mapping/fullRelease
-          zip mapping-full.zip mapping.txt
-          mv mapping-full.zip ../../../upload/mapping-full.zip
-          
-          # Lite mapping
-          cd ../../../../../app/build/outputs/mapping/liteRelease
-          zip mapping-lite.zip mapping.txt
-          mv mapping-lite.zip ../../../upload/mapping-lite.zip
-
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
@@ -185,9 +172,7 @@ jobs:
             This is an automated nightly release that gets updated with each new build.
           files: |
             app/build/upload/zhihu++-lite.apk
-            app/build/upload/mapping-lite.zip
             app/build/upload/zhihu++-full.apk
-            app/build/upload/mapping-full.zip
           prerelease: true
       - name: Create Release
         if: ${{ inputs.release && startsWith(github.ref, 'refs/tags/') }}
@@ -202,8 +187,6 @@ jobs:
             Full 版本包含 AI 功能和 AI 模型，可处理NLP任务；Lite 版本体积更小，只有 3 MB 的大小。
           files: |
             app/build/upload/zhihu++-lite.apk
-            app/build/upload/mapping-lite.zip
             app/build/upload/zhihu++-full.apk
-            app/build/upload/mapping-full.zip
           prerelease: false
 
